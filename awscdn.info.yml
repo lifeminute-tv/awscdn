@@ -1,0 +1,7 @@
+name: AWS CDN
+type: module
+description: 'AWS Content Delivery Network. Migrate from Brightcove to AWS'
+package: custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:key

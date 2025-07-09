@@ -1,0 +1,13 @@
+<?php
+
+
+function awscdn_theme() {
+    return [
+      'streamlist' => [
+        'variables' => [
+          'channels' => [],
+        ],
+      ],
+    ];
+
+    }

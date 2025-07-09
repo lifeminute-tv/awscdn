@@ -1,0 +1,8 @@
+awscdn.test:
+  path: 'aws/test'
+  defaults:
+    _title: 'test'
+    _controller: '\Drupal\awscdn\Controller\AwsCdnController:test'
+  requirements:
+    _role: 'authenticated'
+    _access: 'TRUE'

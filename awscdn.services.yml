@@ -1,0 +1,7 @@
+services:
+    awscdn.logger:
+        class: Drupal\awscdn\Logger
+        arguments: ['@logger.factory', '@messenger']
+    awscdn.aws:
+        class: Drupal\awscdn\Aws
+        arguments: ['@key.repository', '@awscdn.logger']
