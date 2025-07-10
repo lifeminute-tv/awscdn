@@ -53,8 +53,10 @@ class AwsCdnStorage {
   public function videoEntry ($entry){
     $q = $this->dbh->insert('awscdn_videos')
     ->fields($entry);
-    return $q->execute()->fetchAll();
+    return $q->execute();
   }
+
+
 
   public function getMulti ($uploadID){
     $q = $this->dbh->select('lmfiles_uploadid', 'm')

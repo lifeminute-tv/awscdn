@@ -80,6 +80,7 @@ class AwsCdnMigrate {
     $query = \Drupal::entityQuery('node')
       ->range(0, $num)
       ->exists('field_bcoveid')
+      ->sort('created', 'ASC')
       ->accessCheck(FALSE);
     if($nid){
       $query->condition('nid', $nid, 'NOT IN');
@@ -91,7 +92,7 @@ class AwsCdnMigrate {
       $videos[] = [
         'bcid'    => $node->field_bcoveid->value,
         'nodeid'     => $node->nid->value,
-        'pubDate' => $node->created->value
+        'pubDate' =>  date( 'Y-m-d H:i:s', $node->created->value)
       ];
     }
     return $videos;
@@ -104,6 +105,11 @@ class AwsCdnMigrate {
   
   public function test($word){
     echo "hazzah $word!";
-    $this->bcids();
+    $videos = $this->bcids();
+   // kint($videos);
+    foreach($videos as $video){
+      kint($video);
+      $this->dbh->videoEntry($video);
+    }
   }
 }

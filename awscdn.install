@@ -21,8 +21,8 @@ function awscdn_schema(){
             ),
             'nodeid' => array(
                 'description' => 'node bcid is attached to',
-                'type' => 'varchar',
-                'mysql_type' => 'date',
+                'type' => 'int',
+                'size' => 'big',
                 'not null' => TRUE,
             ),
             'pubDate' => array(
