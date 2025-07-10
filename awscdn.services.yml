@@ -1,7 +1,17 @@
 services:
     awscdn.logger:
-        class: Drupal\awscdn\Logger
+        class: Drupal\awscdn\AwsCdnLogger
         arguments: ['@logger.factory', '@messenger']
+    awscdn.storage:
+        class: Drupal\awscdn\AwsCdnStorage
+        arguments: ['@database', '@awscdn.logger']
     awscdn.aws:
         class: Drupal\awscdn\Aws
-        arguments: ['@key.repository', '@awscdn.logger']
+        arguments: ['@key.repository', '@awscdn.storage', '@awscdn.link', '@awscdn.logger']
+    awscdn.link:
+        class: Drupal\awscdn\AwsCdnLink
+        arguments: ['@key.repository']
+    awscdn.migrate:
+        class: Drupal\awscdn\AwsCdnMigrate
+        arguments: ['@bcove', '@awscdn.aws', '@awscdn.storage', '@awscdn.link', '@awscdn.logger', '@entity_type.manager']
+

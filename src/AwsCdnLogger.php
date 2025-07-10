@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 
-class Logger {
+class AwsCdnLogger {
 
   protected $logger;
   protected $msg;

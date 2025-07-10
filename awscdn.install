@@ -1,0 +1,55 @@
+<?php
+use Drupal\Core\Database\Database;
+
+
+
+
+/**
+ * Implements hook_schema().
+ */
+function awscdn_schema(){
+////////////////////////////////////need to insatll
+
+    $schema['awscdn_videos'] = array(
+        'description' => 'The table for storing all bcids on the site',
+        'fields' => array(
+            'bcid' => array(
+                'description' => 'size of file',
+                'type' => 'int',
+                'size' => 'big',
+                'not null' => TRUE,
+            ),
+            'nodeid' => array(
+                'description' => 'node bcid is attached to',
+                'type' => 'varchar',
+                'mysql_type' => 'date',
+                'not null' => TRUE,
+            ),
+            'pubDate' => array(
+                'description' => 'date video was published',
+                'type' => 'varchar',
+                'mysql_type' => 'date',
+                'not null' => TRUE,
+            ),
+            'noarchive' => array(
+                'description' => 'dont put in archive if old',
+                'type' => 'text',
+                'size' => 'tiny',
+                'not null' => FALSE,
+            ),
+            'migrated' => array(
+                'description' => 'has video been migrated to aws',
+                'type' => 'text',
+                'size' => 'tiny',
+                'not null' => FALSE,
+            ),
+        ),
+        'primary key' => array('bcid'),
+        'indexes' => array(
+            'nodid' => array('nodeid'),
+            'pubDate' => array('pubDate'),
+        ),
+    );
+
+    return $schema;
+}
