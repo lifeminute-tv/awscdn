@@ -68,13 +68,28 @@ class AwsCdnMigrate {
     );
   }
 
-  public function inDB (){
+  public function videoDB (){
+    $run = 1;
+    while($run){
+      $videos = $this->bcids();
+      if(count($videos)){
+        foreach($videos as $video){
+          $this->dbh->videoEntry($video);
+        }
+      }else{
+        $run = NULL;
+      }
+      kint('Ahoy Mateyu');
+    }
 
   }
 
-  public function bcids ($nid = null){
+
+  public function bcids (){
     $videos = [];
     $num = 10;
+
+    $bcids = $this->dbh->inDB();
 
     $storage = $this->entityMgr->getStorage('node');
     $query = \Drupal::entityQuery('node')
@@ -82,34 +97,26 @@ class AwsCdnMigrate {
       ->exists('field_bcoveid')
       ->sort('created', 'ASC')
       ->accessCheck(FALSE);
-    if($nid){
-      $query->condition('nid', $nid, 'NOT IN');
+    if(count($bcids)){
+      kint('we countin');
+      $query->condition('field_bcoveid', $bcids, 'NOT IN');
     }
 
     $nids = $query->execute();
     $nodes = $storage->loadMultiple($nids);
     foreach($nodes as $node){
       $videos[] = [
-        'bcid'    => $node->field_bcoveid->value,
+        'bcid'    => (int) $node->field_bcoveid->value,
         'nodeid'     => $node->nid->value,
         'pubDate' =>  date( 'Y-m-d H:i:s', $node->created->value)
       ];
     }
     return $videos;
-    kint($videos);
-    kint($nids);
-    kint($nodes);
-  //  kint($nodes);
-  //field_bcoveid
   }
   
   public function test($word){
     echo "hazzah $word!";
-    $videos = $this->bcids();
-   // kint($videos);
-    foreach($videos as $video){
-      kint($video);
-      $this->dbh->videoEntry($video);
-    }
+    $this->videoDB();
+    exit;
   }
 }

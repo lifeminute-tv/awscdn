@@ -46,7 +46,6 @@ function awscdn_schema(){
         ),
         'primary key' => array('bcid'),
         'indexes' => array(
-            'nodid' => array('nodeid'),
             'pubDate' => array('pubDate'),
         ),
     );

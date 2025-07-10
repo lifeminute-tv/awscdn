@@ -46,8 +46,8 @@ class AwsCdnStorage {
 
   public function inDB (){
     $q = $this->dbh->select('awscdn_videos', 'v')
-    ->fields('v', ['nodeid']);
-    return $q->execute()->fetchAll();
+    ->fields('v', ['bcid']);
+    return $q->execute()->fetchCol();
   }
 
   public function videoEntry ($entry){
@@ -62,7 +62,7 @@ class AwsCdnStorage {
     $q = $this->dbh->select('lmfiles_uploadid', 'm')
     ->fields('m', []);
     $q->condition('UploadId', $uploadID, '=');
-    return $q->execute()->fetchAll()[0];
+    return $q->execute()->fetchField;
   }
 
   public function deleteMulti($uploadID){
