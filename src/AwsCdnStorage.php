@@ -44,11 +44,16 @@ class AwsCdnStorage {
   }
 
 
-  public function getMime ($ext){
-    $q = $this->dbh->select('lmfiles_mime', 'm')
-    ->fields('m', ['mime']);
-    $q->condition('ext', $ext, '=');
-    return $q->execute()->fetchField();
+  public function inDB (){
+    $q = $this->dbh->select('awscdn_videos', 'v')
+    ->fields('v', ['nodeid']);
+    return $q->execute()->fetchAll();
+  }
+
+  public function videoEntry ($entry){
+    $q = $this->dbh->insert('awscdn_videos')
+    ->fields($entry);
+    return $q->execute()->fetchAll();
   }
 
   public function getMulti ($uploadID){

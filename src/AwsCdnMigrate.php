@@ -68,23 +68,38 @@ class AwsCdnMigrate {
     );
   }
 
-  public function bcids ($num = 10){
+  public function inDB (){
+
+  }
+
+  public function bcids ($nid = null){
+    $videos = [];
+    $num = 10;
+
     $storage = $this->entityMgr->getStorage('node');
     $query = \Drupal::entityQuery('node')
-    ->range(0, $num)
-    ->exists('field_bcoveid')
-    ->accessCheck(FALSE);
-  $nids = $query->execute();
-  $nodes = $storage->loadMultiple($nids);
-  foreach($nodes as $node){
-    kint($node->field_bcoveid->value);
-    kint($node->nid->value);
-    echo 'ra';
-  }
-  kint($nids);
-  kint($nodes);
-//  kint($nodes);
-//field_bcoveid
+      ->range(0, $num)
+      ->exists('field_bcoveid')
+      ->accessCheck(FALSE);
+    if($nid){
+      $query->condition('nid', $nid, 'NOT IN');
+    }
+
+    $nids = $query->execute();
+    $nodes = $storage->loadMultiple($nids);
+    foreach($nodes as $node){
+      $videos[] = [
+        'bcid'    => $node->field_bcoveid->value,
+        'nodeid'     => $node->nid->value,
+        'pubDate' => $node->created->value
+      ];
+    }
+    return $videos;
+    kint($videos);
+    kint($nids);
+    kint($nodes);
+  //  kint($nodes);
+  //field_bcoveid
   }
   
   public function test($word){
