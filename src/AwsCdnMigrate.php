@@ -71,48 +71,37 @@ class AwsCdnMigrate {
 
    public function fixBcid (){
 
-    $videos = [];
-    $num = 2;
-
-    $bcids = $this->dbh->inDB();
-
+    $offset = 0;
+    $num = 2000;
     $storage = $this->entityMgr->getStorage('node');
-    $query = \Drupal::entityQuery('node')
-      ->range(0, $num)
-      ->exists('field_bcoveid')
-      ->sort('created', 'ASC')
-      ->accessCheck(FALSE);
 
-          if(count($bcids)){
-      $query->condition('field_bcoveid', $bcids, 'NOT IN');
-    }
+    while(1){
+      kint("offset: $offset");
+      
+      $query = \Drupal::entityQuery('node')
+        ->range($offset, $num)
+        ->exists('field_bcoveid')
+        ->sort('created', 'ASC')
+        ->accessCheck(FALSE);
 
-    $nids = $query->execute();
- 
-    $nodes = $storage->loadMultiple($nids);
-    foreach($nodes as $node){
-      kint($node->field_bcoveid->value);
-      kint($node->nid->value);
-
-      if( preg_match('/\s/',$node->field_bcoveid->value)){
-
-        echo "we gots the space";
-        $bcid = str_replace(' ', '', $node->field_bcoveid->value);
-        $node->field_bcoveid->value = "temp";
-        $node->save();
-        $node->field_bcoveid->value = $bcid;
-        $node->save();
-     //   $node->set('field_bcoveid', (int) $node->field_bcoveid->value);
-      //  $node->save();
-        kint($node->field_bcoveid->value);
-      }else{
-        echo "noooooooooooooooooo";
+      $nids = $query->execute();
+      $nodes = $storage->loadMultiple($nids);
+      foreach($nodes as $node){
+        if( preg_match('/\s/',$node->field_bcoveid->value)){
+          kint('Fixin Space');
+          kint($node->nid->value);
+          kint($node->field_bcoveid->value);
+          $bcid = str_replace(' ', '', $node->field_bcoveid->value);
+          $node->field_bcoveid->value = "temp";
+          $node->save();
+          kint($node->field_bcoveid->value);
+          $node->field_bcoveid->value = $bcid;
+          $node->save();
+          kint($node->field_bcoveid->value);
+        }
       }
- 
-echo 'smoop';
-
+      $offset += $num;
     }
-
    }
 
   public function videoDB (){
@@ -165,8 +154,8 @@ echo 'smoop';
 
     echo "hazzah $word!";
 
-   // $this->videoDB();
-  //  exit;
+    $this->videoDB();
+    exit;
  
     $this->fixBcid();
 
