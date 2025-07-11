@@ -56,6 +56,13 @@ class AwsCdnStorage {
     return $q->execute();
   }
 
+  public function bcid ($bcid){
+    $q = $this->dbh->select('awscdn_videos', 'v')
+    ->fields('v',[])
+    ->condition('bcid', $bcid, '=');
+    return $q->execute()->fetchAll();
+  }
+
 
 
   public function getMulti ($uploadID){

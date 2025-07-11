@@ -68,7 +68,55 @@ class AwsCdnMigrate {
     );
   }
 
+
+   public function fixBcid (){
+
+    $videos = [];
+    $num = 2;
+
+    $bcids = $this->dbh->inDB();
+
+    $storage = $this->entityMgr->getStorage('node');
+    $query = \Drupal::entityQuery('node')
+      ->range(0, $num)
+      ->exists('field_bcoveid')
+      ->sort('created', 'ASC')
+      ->accessCheck(FALSE);
+
+          if(count($bcids)){
+      $query->condition('field_bcoveid', $bcids, 'NOT IN');
+    }
+
+    $nids = $query->execute();
+ 
+    $nodes = $storage->loadMultiple($nids);
+    foreach($nodes as $node){
+      kint($node->field_bcoveid->value);
+      kint($node->nid->value);
+
+      if( preg_match('/\s/',$node->field_bcoveid->value)){
+
+        echo "we gots the space";
+        $bcid = str_replace(' ', '', $node->field_bcoveid->value);
+        $node->field_bcoveid->value = "temp";
+        $node->save();
+        $node->field_bcoveid->value = $bcid;
+        $node->save();
+     //   $node->set('field_bcoveid', (int) $node->field_bcoveid->value);
+      //  $node->save();
+        kint($node->field_bcoveid->value);
+      }else{
+        echo "noooooooooooooooooo";
+      }
+ 
+echo 'smoop';
+
+    }
+
+   }
+
   public function videoDB (){
+
     $run = 1;
     while($run){
       $videos = $this->bcids();
@@ -81,7 +129,6 @@ class AwsCdnMigrate {
       }
       kint('Ahoy Mateyu');
     }
-
   }
 
 
@@ -98,7 +145,6 @@ class AwsCdnMigrate {
       ->sort('created', 'ASC')
       ->accessCheck(FALSE);
     if(count($bcids)){
-      kint('we countin');
       $query->condition('field_bcoveid', $bcids, 'NOT IN');
     }
 
@@ -115,8 +161,17 @@ class AwsCdnMigrate {
   }
   
   public function test($word){
+
+
     echo "hazzah $word!";
-    $this->videoDB();
+
+   // $this->videoDB();
+  //  exit;
+ 
+    $this->fixBcid();
+
+
     exit;
+    $this->videoDB();
   }
 }
